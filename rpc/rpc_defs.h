@@ -59,7 +59,7 @@
 // RPC constants
 
 /* Maximum pkt size can be 4096 bytes, but I'm paranoid about way conflicts */
-#define RPC_MAX_MAX_PKT_SIZE 4032
+#define RPC_MAX_MAX_PKT_SIZE 8032
 #define RPC_MAX_QPS 3	/* Maximum QPs per port */
 
 /* Buffer sizes */

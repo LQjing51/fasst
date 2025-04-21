@@ -219,7 +219,7 @@ void parse_config()
 	assert(num_machines >= 0 && num_machines <= 256);
 	assert(workers_per_machine >= 1 && workers_per_machine <= 56);
 	assert(req_batch_size >= 1 && req_batch_size <= RPC_MAX_POSTLIST);
-	assert(size_req > 0 && size_req <= 256 && size_req % sizeof(uint64_t) == 0);
+	assert(size_req > 0 && size_req <= 512 && size_req % sizeof(uint64_t) == 0);
 	assert(size_resp > 0 && size_resp < RPC_MAX_MAX_PKT_SIZE &&
 		size_resp % sizeof(uint32_t) == 0);
 

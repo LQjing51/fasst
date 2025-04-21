@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #define CHECK_RESP 0
-#define USE_UNIQUE_WORKERS 1 /* All requests in batch are to different workers */
+#define USE_UNIQUE_WORKERS 0 /* All requests in batch are to different workers */
 
 struct global_stats_t {
 	double req_rate;

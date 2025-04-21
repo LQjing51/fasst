@@ -18,7 +18,7 @@ Rpc::Rpc(struct rpc_args args) : info(args)
 	assert(shm_key < RPC_MAX_SHM_KEY);
 
 	cb = hrd_ctrl_blk_init(info.wrkr_gid, /* local hid */
-		pr_port, 0, /* port index, numa node */
+		pr_port, info.numa_node, /* port index, numa node */
 		0, 0, /* conn qps, UC */
 		NULL, 0, -1, /* conn prealloc buf, buf size, conn buf shm key */
 		NULL, info.num_qps,	/* dgram prealloc buf, dgram qps */

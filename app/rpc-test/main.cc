@@ -62,7 +62,8 @@ int main(int argc, char *argv[])
 		/* Pin thread i to hardware thread 2 * i */
 		cpu_set_t cpuset;
 		CPU_ZERO(&cpuset);
-		CPU_SET(2 * i, &cpuset);
+		size_t cpu_id = 8 + i <= 15 ? 8 + i : 16 + i ;
+		CPU_SET(cpu_id, &cpuset);
 		int rc = pthread_setaffinity_np(thread_arr[i].native_handle(),
 			sizeof(cpu_set_t), &cpuset);
 		if (rc != 0) {

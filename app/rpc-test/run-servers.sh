@@ -27,6 +27,6 @@ if [ "$1" -eq 0 ]; then
 fi
 
 sudo LD_LIBRARY_PATH=/usr/local/lib/ -E \
-	numactl --membind=0 --cpunodebind=0 ./main --machine-id $1 &
+	numactl --membind=1 --cpunodebind=1 taskset -c 8,9,10,11,12,13,14,15 ./main --machine-id $1 &
 
 # Debug: run --num-threads 1 --num-coro 2 --base-port-index 0 --num-ports 2 --num-qps 2 --machine-id 0 --postlist 16 --numa-node 0 --size-req 48 --size-resp 8

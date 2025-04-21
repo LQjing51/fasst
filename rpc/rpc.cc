@@ -58,6 +58,8 @@ Rpc::Rpc(struct rpc_args args) : info(args)
 				usleep(20000);
 			}
 		}
+		rpc_dprintf("Rpc: rem qp: name %s, buf addr %ld, buf size %d, qpn %d, lid %d, gid subnet_prefix %lld, gid interface_id %lld\n",
+		rem_qp->name, rem_qp->buf_addr, rem_qp->buf_size, rem_qp->qpn, rem_qp->lid, rem_qp->gid.global.subnet_prefix, rem_qp->gid.global.interface_id);
 
 		/* We only need to save the remote QPN. LID is saved in ah. */
 		rem_qpn[mc_i] = rem_qp->qpn;
@@ -67,14 +69,28 @@ Rpc::Rpc(struct rpc_args args) : info(args)
 		
 		struct ibv_ah_attr ah_attr;
 		memset(&ah_attr, 0, sizeof(struct ibv_ah_attr));
-		ah_attr.is_global = 0;
-		ah_attr.dlid = rem_qp->lid;
+		ah_attr.is_global = (isROCE == 1 ) ? 1 : 0,
+		ah_attr.dlid = (isROCE == 1) ? 0 : rem_qp->lid;
 		ah_attr.sl = 0;
 		ah_attr.src_path_bits = 0;
 		ah_attr.port_num = cb->dev_port_id;	/* Local port */
 
+		if(isROCE == 1) {
+			ah_attr.grh.dgid.global.interface_id =
+				rem_qp->gid.global.interface_id;
+			ah_attr.grh.dgid.global.subnet_prefix =
+				rem_qp->gid.global.subnet_prefix;
+
+			ah_attr.grh.sgid_index = 3;
+			ah_attr.grh.hop_limit = 1;
+		}
+
 		ah[mc_i] = ibv_create_ah(cb->pd, &ah_attr);
-		assert(ah[mc_i] != NULL);
+		if (ah[mc_i] == NULL) {
+			fprintf(stderr, "Rpc: Failed to create AH for %s, error %s\n",
+				rem_qp_name, strerror(errno));
+			exit(-1);
+		}
 	}
 
 	hrd_red_printf("Rpc: initialization done. Closing memcached connection.!\n");

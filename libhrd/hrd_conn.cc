@@ -331,7 +331,24 @@ void hrd_create_dgram_qps(struct hrd_ctrl_blk *cb)
 		struct ibv_qp_attr rtr_attr;
 		memset((void *) &rtr_attr, 0, sizeof(struct ibv_qp_attr));
 		rtr_attr.qp_state = IBV_QPS_RTR;
+
+		// // if(isROCE == 1) {
+		// 	rtr_attr.ah_attr			= {
+		// 		.is_global			= 1,
+		// 		.dlid				= 0,
+		// 		.sl					= 0,
+		// 		.src_path_bits		= 0,
+		// 		.port_num			= 1
+		// 	};
+		// 	rtr_attr.ah_attr.grh.dgid.global.interface_id =
+		// 		dest.gid_global_interface_id;
+		// 	rtr_attr.ah_attr.grh.dgid.global.subnet_prefix =
+		// 		dest.gid_global_subnet_prefix;
 		
+		// 	rtr_attr.ah_attr.grh.sgid_index = 0;
+		// 	rtr_attr.ah_attr.grh.hop_limit = 1;
+		// // }
+
 		if(ibv_modify_qp(cb->dgram_qp[i], &rtr_attr, IBV_QP_STATE)) {
 			fprintf(stderr, "Failed to modify dgram QP to RTR\n");
 			exit(-1);
@@ -601,6 +618,7 @@ void hrd_publish_dgram_qp(struct hrd_ctrl_blk *cb, int n, const char *qp_name)
 	memcpy(qp_attr.name, qp_name, len);
 	qp_attr.name[len] = 0;	/* Add the null terminator */
 	qp_attr.lid = hrd_get_local_lid(cb->dgram_qp[n]->context, cb->dev_port_id);
+	qp_attr.gid = hrd_get_local_gid(cb->dgram_qp[n]->context, cb->dev_port_id);
 	qp_attr.qpn = cb->dgram_qp[n]->qp_num;
 	
 	hrd_publish(qp_attr.name, &qp_attr, sizeof(struct hrd_qp_attr));

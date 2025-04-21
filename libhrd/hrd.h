@@ -79,6 +79,7 @@ struct hrd_qp_attr {
 	
 	int lid;
 	int qpn;
+	ibv_gid gid;	/* GID for dgram QPs */
 };
 
 struct hrd_ctrl_blk {
@@ -134,6 +135,7 @@ struct ibv_device* hrd_resolve_port_index(struct hrd_ctrl_blk *cb,
 	int port_index);
 
 uint16_t hrd_get_local_lid(struct ibv_context *ctx, int port_id);
+ibv_gid hrd_get_local_gid(struct ibv_context *ctx, int port_id);
 
 void hrd_create_conn_qps(struct hrd_ctrl_blk *cb);
 void hrd_create_dgram_qps(struct hrd_ctrl_blk *cb);

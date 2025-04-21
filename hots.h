@@ -21,7 +21,8 @@ using namespace boost::coroutines;
 #define TX_DEBUG_ASSERT 0	/* tx_defs.h */
 #define LS_DEBUG_ASSERT 0	/* lockserver.h */
 
-#define RPC_DEBUG_PRINTF 0	/* rpc_defs.h */
+#define RPC_DEBUG_PRINTF 1	/* rpc_defs.h */
+#define isROCE 1
 
 #define HOTS_ASSERT_MSG(condition, message) \
 	do { \
@@ -49,7 +50,7 @@ static_assert(bit_capacity(HOTS_WRKR_GID_BITS) >= HOTS_MAX_WORKERS, "");
 
 #define HOTS_MAX_SERVER_THREADS 56	/* Maximum threads per server */
 
-#define HOTS_MAX_PORTS 2	/* Max RDMA ports used at any server */
+#define HOTS_MAX_PORTS 10	/* Max RDMA ports used at any server */
 #define HOTS_GRH_BYTES 40
 
 // SHM keys: Exclusive range for each subsystem. Applications use keys >= 1000

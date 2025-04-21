@@ -103,8 +103,8 @@ struct ibv_device* hrd_resolve_port_index(struct hrd_ctrl_blk *cb, int port_inde
 			}
 
 			if(ports_to_discover == 0) {
-				printf("HRD: port index %d resolved to device %d, port %d\n",
-					port_index, dev_i, port_i);
+				printf("HRD: port index %d resolved to device (%d, %s), port %d\n",
+					port_index, dev_i, ctx->device->name, port_i);
 				
 				/* Fill the device ID and device-local port ID */
 				cb->device_id = dev_i;
@@ -277,7 +277,19 @@ uint16_t hrd_get_local_lid(struct ibv_context *ctx, int dev_port_id)
 
 	return attr.lid;
 }
+/* Get the GID of a port on the device specified by @ctx */
+ibv_gid hrd_get_local_gid(struct ibv_context *ctx, int dev_port_id)
+{
+	assert(ctx != NULL && dev_port_id >= 1);
 
+	union ibv_gid gid;
+	if(ibv_query_gid(ctx, dev_port_id, 3, &gid)) {
+		printf("HRD: ibv_query_gid on port %d of device %s failed! Exiting.\n",
+			dev_port_id, ibv_get_device_name(ctx->device));
+		assert(false);
+	}
+	return gid;
+}
 /* Return the environment variable @name if it is set. Exit if not. */
 char* hrd_getenv(const char *name)
 {

@@ -264,10 +264,10 @@ void run_thread(struct thread_params *params)
 	for(int coro_i = 0; coro_i < num_coro; coro_i++) {
 		if(coro_i == RPC_MASTER_CORO_ID) {
 			coro_arr[coro_i] = coro_call_t(bind(master_func, _1, coro_i),
-				attributes(fpu_not_preserved));
+				attributes());
 		} else {
 			coro_arr[coro_i] = coro_call_t(bind(slave_func, _1, coro_i),
-				attributes(fpu_not_preserved));
+				attributes());
 		}
 	}
 
